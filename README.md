@@ -24,8 +24,8 @@ Using "scaff" as basename instead of "scaffold" because some headers would be to
 funannotate clean -i BM16_aligned_sorted.fasta -o BM16_aligned_sorted_clean.fasta
 ```
 
-### 4. RepeatMasking
+### 4. RepeatMasking (skipped clean step)
 ```
-funannotate mask
+funannotate predict -i BM16_aligned_sorted_mask.fasta -o fun_BM16 --species "Botrytis cinerea" --strain BM16 --busco_seed_species botrytis_cinerea --cpus 24
 ```
 

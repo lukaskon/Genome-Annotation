@@ -35,16 +35,20 @@ scontrol show job $SLURM_JOB_ID
 #SBATCH --cpus-per-task=16           # number of CPUs (or cores) per task (same as -c)
 #SBATCH --mem=100G                    # memory required per node - amount of memory (in bytes)
 #SBATCH --job-name quast_BM16      # you can give your job a name for easier identification (same as -J)
-#SBATCH -o BM17_quast_slurm
+#SBATCH -o BM16_quast_slurm
 
 ########## Command Lines to Run ##########
 
 module load GCC/9.3.0  OpenMPI/4.0.3
 module load QUAST/5.1.0rc1-Python-3.8.2
 
-cd /mnt/research/Hausbeck_group/Lukasko/BotrytisDNASeq/CCR7/SPAdes_assemblies quast.py BM16.assembly.fa \
+cd /mnt/research/Hausbeck_group/Lukasko/BotrytisDNASeq/CCR7/SPAdes_assemblies
+
+quast.py /BM16_assembly/BM16_scaffolds.fasta \
 -r ../../0_DNAscripts/ReferenceGenome/Botrytis_cinerea.ASM83294v1.dna.toplevel.fa \
 -g ../../0_DNAscripts/ReferenceGenome/Botrytis_cinerea.ASM83294v1.52.gff3 \
+-1 BM16_S10_L002_R1_trim_UP.fastq \
+-2 BM16_S10_L002_R1_trim_UP.fastq \
 -t 16 --fungus --contig-thresholds \
 -o /Quast_metrics/BM16_quast
 
@@ -57,10 +61,10 @@ scontrol show job $SLURM_JOB_ID
 https://funannotate.readthedocs.io/en/latest/index.html
 
 
-### 1. Convert bam files to fasta format
+### 1. 
 
 ```
-samtools fasta BM16_S10_aln_bwamem2.bam > BM16_aligned.fasta
+
 ```
 
 ### 2. Sort and rename fasta headers

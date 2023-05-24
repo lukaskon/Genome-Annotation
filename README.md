@@ -31,7 +31,7 @@ scontrol show job $SLURM_JOB_ID
 #!/bin/bash --login
 ########### Define Resources Needed with SBATCH Lines ##########
 
-#SBATCH --time=12:00:00             # limit of wall clock time - how long the job will run (same as -t)
+#SBATCH --time=13:00:00             # limit of wall clock time - how long the job will run (same as -t)
 #SBATCH --ntasks=1                  # number of tasks - how many tasks (nodes) that you require (same as -n)
 #SBATCH --cpus-per-task=32           # number of CPUs (or cores) per task (same as -c)
 #SBATCH --mem=800G                    # memory required per node - amount of memory (in bytes)
@@ -44,14 +44,12 @@ module load GCC/10.2.0
 module load SPAdes/3.15.2
 
 cd /mnt/research/Hausbeck_group/Lukasko/BotrytisDNASeq/CCR7/SPAdes_assemblies/Trimmed_fastas
-gunzip *.gz
-
-for file1 in *R1_*fastq
+for infile in *_R1_trim_UP.fastq
 do
-file2=${file1/R1/R2}
-out=${file1%%.fastq}_assembly
-spades.py --careful -t 32 -m 800 -1 $file1 -2 $file2 -o ../$out &
+base=$(basename ${infile} _R1_trim_UP.fastq)
+spades.py -o ../${base}_assembly --careful -t 32 -m 800 -1 ${base}_R1_trim_UP.fastq -2 ${base}_R2_trim_UP.fastq
 done
+
 
 scontrol show job $SLURM_JOB_ID
 

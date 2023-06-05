@@ -136,6 +136,18 @@ funannotate-mask.log contains
 
 
 #### 1. InterProScan5
+Installed InterProScan locally, then created symbolic links to the pf* files within the conda funannotate bin directory.
+```
+conda activate funannotate
+module purge
+module load Java/19.0.2
+./interproscan.sh -i test_all_appl.fasta -f tsv -dp
+```
+Current error: 
+Error: File format problem in trying to open HMM file data/gene3d/4.3.0/gene3d_main.hmm.
+Opened data/gene3d/4.3.0/gene3d_main.hmm.h3m, a pressed HMM file; but format of its .h3i file unrecognized
+
+
 ```
 funannotate iprscan -i fun_BM16 -m local --iprscan_path /mnt/research/Hausbeck_group/Lukasko/BotrytisDNASeq/CCR7/my_interproscan/interproscan-5.62-94.0/interproscan.sh
 ```

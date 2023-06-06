@@ -158,6 +158,13 @@ Now we want to run Eggnog-mapper. You can run this on their webserver http://egg
 
 #### 3. antiSMASH
 
+```
+conda activate antismash
+antismash --minimal --taxon fungi Botrytis_cinerea_AF13.gbk \
+--genefinding-gff3 Botrytis_cinerea_AF13.gff3 \
+--genefinding-tool none \
+--output-dir AF13_antismash
+```
 
 #### 4. phobius
 

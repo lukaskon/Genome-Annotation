@@ -147,10 +147,42 @@ Current error:
 Error: File format problem in trying to open HMM file data/gene3d/4.3.0/gene3d_main.hmm.
 Opened data/gene3d/4.3.0/gene3d_main.hmm.h3m, a pressed HMM file; but format of its .h3i file unrecognized
 
+Use Interproscan directly instead of through funanotate. Code recommended by creator in a comment on issues thread: https://github.com/nextgenusfs/funannotate/issues/841
+```
+#interproscan.sh -i /pathto/predict_results/genome.proteins.fasta -f XML -goterms -pa
+```
+```
+#!/bin/bash --login
+########### Define Resources Needed with SBATCH Lines ##########
+
+#SBATCH --time=03:00:00             # limit of wall clock time - how long the job will run (same as -t)
+#SBATCH --ntasks=1                  # number of tasks - how many tasks (nodes) that you require (same as -n)
+#SBATCH --cpus-per-task=12           # number of CPUs (or cores) per task (same as -c)
+#SBATCH --mem=100G                    # memory required per node - amount of memory (in bytes)
+#SBATCH --job-name AF13_test_IPR      # you can give your job a name for easier identification (same as -J)
+#SBATCH -o IPR_test5_slurm
+
+########## Command Lines to Run #########
+
+cd /mnt/research/Hausbeck_group/Lukasko/BotrytisDNASeq/CCR7/Predict_Annotate
+
+for infile in AF13T*
+
+do
+
+base=$(basename ${infile} _fun)
+
+../my_interproscan/interproscan-5.62-94.0/interproscan.sh -i ${base}_fun/predict_results/Botrytis_cinerea_${base}.proteins.fa \
+--cpu 12 -f XML -goterms -pa \
+-o ${base}_fun/predict_results/${base}_ipr.xml
+
+done
+
+scontrol show job $SLURM_JOB_ID
+
 
 ```
-funannotate iprscan -i fun_BM16 -m local --iprscan_path /mnt/research/Hausbeck_group/Lukasko/BotrytisDNASeq/CCR7/my_interproscan/interproscan-5.62-94.0/interproscan.sh
-```
+
 #### 2. Eggnog-mapper
 
 Now we want to run Eggnog-mapper. You can run this on their webserver http://eggnogdb.embl.de/#/app/emapper or if you have it installed locally then funannotate annotate will run it for you.

@@ -92,7 +92,8 @@ View report.html in browser for statistics.
 Check contig sizes to ensure that a cutoff of 1000 is appropriate for downstream.
 
 
-## Annotate genome using the funannotate pipeline
+
+## Annotate
 https://funannotate.readthedocs.io/en/latest/index.html
 
 
@@ -129,6 +130,63 @@ funannotate-mask.log contains
 1. Number of scaffolds
 2. Size of genome
 3. Masked repeats (bp and %)
+
+
+
+### Run Busco separate from funannotate to use specific database (need to use local writable Augustus)
+
+```
+#!/bin/bash --login
+########### Define Resources Needed with SBATCH Lines ##########
+
+#SBATCH --time=06:00:00             # limit of wall clock time - how long the job will run (same as -t)
+#SBATCH --ntasks=1                  # number of tasks - how many tasks (nodes) that you require (same as -n)
+#SBATCH --cpus-per-task=24           # number of CPUs (or cores) per task (same as -c)
+#SBATCH --mem=50G                    # memory required per node - amount of memory (in bytes)
+#SBATCH --job-name Buscoloop      # you can give your job a name for easier identification (same as -J)
+#SBATCH -o Busco_loop_slurm
+
+########## Command Lines to Run ##########
+
+module load GCC/10.2.0  OpenMPI/4.0.5
+module load BUSCO/5.3.0
+
+
+cd /mnt/research/Hausbeck_group/Lukasko/BotrytisDNASeq/CCR7/SPAdes_assemblies
+
+for infile in *_assembly
+
+do
+
+base=$(basename ${infile} _assembly)
+
+cd ${base}_assembly
+
+busco -i ${base}_CSM.fasta \
+-m genome \
+-o ${base}_busco \
+-l /mnt/research/Hausbeck_group/Lukasko/BotrytisDNASeq/CCR7/busco_downloads/lineages/helotiales_odb10 \
+--augustus --augustus_species botrytis_cinerea \
+--cpu 24
+
+cd ..
+
+done
+
+conda deactivate
+```
+
+
+
+
+
+
+busco -i ${base}_CSM.fasta -m genome -o ${base}_busco -l /mnt/research/Hausbeck_group/Lukasko/BotrytisDNASeq/CCR7/busco_downloads/lineages/helotiales_odb10 --augustus --augustus_species botrytis_cinerea --cpu 24
+
+
+
+
+
 
 
 ## Functional Annotation Tools

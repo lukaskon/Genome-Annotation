@@ -249,18 +249,39 @@ Now we want to run Eggnog-mapper. You can run this on their webserver http://egg
 #### 3. antiSMASH
 
 ```
-conda activate antismash
-antismash --help-showall
+#!/bin/bash --login
+########### Define Resources Needed with SBATCH Lines ##########
 
-antismash --minimal --taxon fungi Botrytis_cinerea_AF13.gbk \
---genefinding-gff3 Botrytis_cinerea_AF13.gff3 \
---genefinding-tool none \
---output-dir AF13_antismash
+#SBATCH --time=2:00:00             # limit of wall clock time - how long the job will run (same as -t)
+#SBATCH --ntasks=1                  # number of tasks - how many tasks (nodes) that you require (same as -n)
+#SBATCH --cpus-per-task=24           # number of CPUs (or cores) per task (same as -c)
+#SBATCH --mem=100G                    # memory required per node - amount of memory (in bytes)
+#SBATCH --job-name Antismash_loop      # you can give your job a name for easier identification (same as -J)
+#SBATCH -o Antismash_BT15_slurm
+
+########## Command Lines to Run #########
+
+module purge
+conda activate antismash
+
+cd /mnt/research/Hausbeck_group/Lukasko/BotrytisDNASeq/CCR7/Predict_Annotate
+for infile in *_fun
+do
+base=$(basename ${infile} _fun)
+cd ${base}_fun/predict_results
+antismash Botrytis_cinerea_${base}.gbk --taxon fungi --pfam2go --genefinding-gff3 Botrytis_cinerea_${base}.gff3 --output-basename ${base}_smash --cpu 24
+cd /mnt/research/Hausbeck_group/Lukasko/BotrytisDNASeq/CCR7/Predict_Annotate
+done
+
+scontrol show job $SLURM_JOB_ID
+
 ```
+Counts can be found in slurm titled "Antismash_Count_slurm"
+
 
 #### 4. phobius
 
-
+Need to obtain binary package from creator. The package is sent via email, but email blocks binary attachments. No response from creator.
 
 
 

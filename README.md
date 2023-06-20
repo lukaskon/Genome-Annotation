@@ -243,7 +243,7 @@ scontrol show job $SLURM_JOB_ID
 
 #### 2. Eggnog-mapper
 
-Now we want to run Eggnog-mapper. You can run this on their webserver http://eggnogdb.embl.de/#/app/emapper or if you have it installed locally then funannotate annotate will run it for you.
+Used interproscan instead
 
 
 #### 3. antiSMASH
@@ -283,8 +283,52 @@ Counts can be found in slurm titled "Antismash_Count_slurm"
 
 Need to obtain binary package from creator. The package is sent via email, but email blocks binary attachments. No response from creator.
 
+#### 5. SignalP
+```
+#!/bin/bash --login
+########### Define Resources Needed with SBATCH Lines ##########
 
+#SBATCH --time=24:00:00             # limit of wall clock time - how long the jo
+b will run (same as -t)
+#SBATCH --ntasks=1                  # number of tasks - how many tasks (nodes) t
+hat you require (same as -n)
+#SBATCH --cpus-per-task=16           # number of CPUs (or cores) per task (same
+as -c)
+#SBATCH --mem=100G                    # memory required per node - amount of mem
+ory (in bytes)
+#SBATCH --job-name SignalP6      # you can give your job a name for easier id
+entification (same as -J)
+#SBATCH -o SignalP_slurm
 
+########## Command Lines to Run #########
+
+cd /mnt/research/Hausbeck_group/Lukasko/BotrytisDNASeq/CCR7/Predict_Annotate
+
+signalp6 --version
+
+for infile in *_fun
+
+do
+
+base=$(basename ${infile} _fun)
+
+cd ${base}_fun/predict_results
+mkdir signalp
+
+signalp6 --fastafile Botrytis_cinerea_${base}.proteins.fa \
+--output_dir /mnt/research/Hausbeck_group/Lukasko/BotrytisDNASeq/CCR7/Predict_An
+notate/${base}_fun/predict_results/signalp \
+--format txt --mode fast
+
+cd /mnt/research/Hausbeck_group/Lukasko/BotrytisDNASeq/CCR7/Predict_Annotate
+
+done
+
+scontrol show job $SLURM_JOB_ID
+```
+cd /mnt/research/Hausbeck_group/Lukasko/BotrytisDNASeq/CCR7/Predict_Annotate/W18_fun/predict_results/signalp
+
+grep -rn "SP" prediction_results.txt |wc -l
 
 
 

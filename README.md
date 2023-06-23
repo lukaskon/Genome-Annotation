@@ -133,13 +133,13 @@ funannotate-mask.log contains
 
 
 
-### Run Busco separate from funannotate to use specific database (need to use local writable Augustus)
+### Run Busco v5 separate from funannotate if wanted (need to use local writable Augustus, change config)
 
 ```
 #!/bin/bash --login
 ########### Define Resources Needed with SBATCH Lines ##########
 
-#SBATCH --time=06:00:00             # limit of wall clock time - how long the job will run (same as -t)
+#SBATCH --time=02:00:00             # limit of wall clock time - how long the job will run (same as -t)
 #SBATCH --ntasks=1                  # number of tasks - how many tasks (nodes) that you require (same as -n)
 #SBATCH --cpus-per-task=24           # number of CPUs (or cores) per task (same as -c)
 #SBATCH --mem=50G                    # memory required per node - amount of memory (in bytes)
@@ -148,13 +148,14 @@ funannotate-mask.log contains
 
 ########## Command Lines to Run ##########
 
+module purge
 module load GCC/10.2.0  OpenMPI/4.0.5
 module load BUSCO/5.3.0
-
+export AUGUSTUS_CONFIG_PATH=/mnt/research/Hausbeck_group/Lukasko/BotrytisDNASeq/CCR7/Augustus-master/config
 
 cd /mnt/research/Hausbeck_group/Lukasko/BotrytisDNASeq/CCR7/SPAdes_assemblies
 
-for infile in *_assembly
+for infile in AI7* W18* B5* BU9* I9* R23* Y1*
 
 do
 
@@ -164,7 +165,7 @@ cd ${base}_assembly
 
 busco -i ${base}_CSM.fasta \
 -m genome \
--o ${base}_busco \
+-o ../Helotiales_busco/${base}_busco_helotiales \
 -l /mnt/research/Hausbeck_group/Lukasko/BotrytisDNASeq/CCR7/busco_downloads/lineages/helotiales_odb10 \
 --augustus --augustus_species botrytis_cinerea \
 --cpu 24

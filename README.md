@@ -331,7 +331,52 @@ cd /mnt/research/Hausbeck_group/Lukasko/BotrytisDNASeq/CCR7/Predict_Annotate/W18
 grep -rn "SP" prediction_results.txt |wc -l
 
 
+## Annotate with funannotate
 
+```
+#!/bin/bash --login
+########### Define Resources Needed with SBATCH Lines ##########
+
+#SBATCH --time=01:00:00             # limit of wall clock time - how long the job will run (same as -t)
+#SBATCH --ntasks=1                  # number of tasks - how many tasks (nodes) that you require (same as -n)
+#SBATCH --cpus-per-task=24           # number of CPUs (or cores) per task (same as -c)
+#SBATCH --mem=80G                    # memory required per node - amount of memory (in bytes)
+#SBATCH --job-name Manu_annotate      # you can give your job a name for easier identification (same as -J)
+#SBATCH -o B5_copy_annotatesignlp2_slurm
+
+########## Command Lines to Run ##########
+
+module purge
+conda activate funannotate
+
+cd /mnt/research/Hausbeck_group/Lukasko/BotrytisDNASeq/CCR7/Predict_Annotate
+
+for infile in B5_copy*
+
+do
+
+base=$(basename ${infile} _fun)
+
+cd ${base}_fun
+
+funannotate annotate -i predict_results \
+--species botrytis_cinerea \
+--iprscan predict_results/B5_ipr.xml \
+--antismash predict_results/B5_smash/B5_smash.gbk \
+--busco_db helotiales_odb10 \
+--isolate B5 \
+--cpus 24 \
+--force
+
+cd ../
+
+done
+
+conda deactivate
+
+scontrol show job $SLURM_JOB_ID
+```
+*SignalP not currently working, use command above for right now.
 
 
 

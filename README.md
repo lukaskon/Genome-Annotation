@@ -327,7 +327,7 @@ done
 
 scontrol show job $SLURM_JOB_ID
 ```
-##### Count of proteins most likely to contain "standard" secretory signals (>50% likelihood)
+##### Count of proteins most likely to contain "standard" secretory signals (>90% likelihood)
 ```
 cd /mnt/research/Hausbeck_group/Lukasko/BotrytisDNASeq/CCR7/Predict_Annotate
 
@@ -347,8 +347,8 @@ cd ${base}_fun/predict_results/signalp
 
 echo ${base}
 
-awk '$4 ~ /\.[98765]/ { print $0 }' prediction_results.txt|wc -l
-
+#awk '$4 ~ /\.[98765]/ { print $0 }' prediction_results.txt|wc -l
+awk '$4 ~ /\.[9]/ { print $0 }' prediction_results.txt|wc -l
 echo
 
 cd /mnt/research/Hausbeck_group/Lukasko/BotrytisDNASeq/CCR7/Predict_Annotate

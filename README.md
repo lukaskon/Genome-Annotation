@@ -327,9 +327,35 @@ done
 
 scontrol show job $SLURM_JOB_ID
 ```
-cd /mnt/research/Hausbeck_group/Lukasko/BotrytisDNASeq/CCR7/Predict_Annotate/W18_fun/predict_results/signalp
+##### Count of proteins most likely to contain "standard" secretory signals (>50% likelihood)
+```
+cd /mnt/research/Hausbeck_group/Lukasko/BotrytisDNASeq/CCR7/Predict_Annotate
 
-grep -rn "SP" prediction_results.txt |wc -l
+echo "Count of secreted proteins"
+echo
+echo "Sec/SPI: "standard" secretory signal peptides transported by the Sec trans
+locon and cleaved by Signal Peptidase I (Lep)"
+echo
+
+for infile in *_fun
+
+do
+
+base=$(basename ${infile} _fun)
+
+cd ${base}_fun/predict_results/signalp
+
+echo ${base}
+
+awk '$4 ~ /\.[98765]/ { print $0 }' prediction_results.txt|wc -l
+
+echo
+
+cd /mnt/research/Hausbeck_group/Lukasko/BotrytisDNASeq/CCR7/Predict_Annotate
+
+done
+
+```
 
 
 ## Annotate with funannotate
